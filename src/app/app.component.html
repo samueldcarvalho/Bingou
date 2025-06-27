@@ -1,6 +1,6 @@
 <div class="card-container">
   <div class="header">
-    <h1 class="logo">Bingo!</h1>
+    <!-- <h1 class="logo">Bingo!</h1> -->
     <p class="sub-title">Noite da Sopa 2025</p>
   </div>
 
@@ -18,10 +18,17 @@
 </div>
 
 <div class="grid-container">
+  <div class="grid-title">
+    <div class="cell" style="font-weight: bold">B</div>
+    <div class="cell" style="font-weight: bold">I</div>
+    <div class="cell" style="font-weight: bold">N</div>
+    <div class="cell" style="font-weight: bold">G</div>
+    <div class="cell" style="font-weight: bold">O</div>
+  </div>
   <div
     class="grid"
     [ngStyle]="{
-      'grid-template-columns': 'repeat(' + this.columnsQuantity() + ', 1fr)',
+      'grid-template-columns': 'repeat(5, 1fr)',
     }"
   >
     @for (number of this.numbers; track $index) {

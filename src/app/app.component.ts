@@ -11,14 +11,16 @@ const numbersKey = 'NUMBERS';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
+  protected router = inject(Router);
   protected lastNumberDrawn = signal<string | null>(null);
+
+  private _numbersQuantity = signal(75);
+
   protected columnsQuantity = computed(() => {
     const sqrt = Math.ceil(Math.sqrt(this._numbersQuantity()));
 
     return sqrt.toFixed(0);
   });
-  private _numbersQuantity = signal(100);
-  protected router = inject(Router);
 
   ngOnInit(): void {
     const lastNumber = localStorage.getItem(lastNumberKey);
