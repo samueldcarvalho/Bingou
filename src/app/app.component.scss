@@ -1,0 +1,151 @@
+@import url("https://fonts.googleapis.com/css2?family=Galada&display=swap");
+
+:host {
+  display: flex;
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-container {
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  max-width: 70dvh;
+}
+
+.logo {
+  font-family: "Galada", cursive;
+  font-size: 5rem;
+  line-height: 2.2rem;
+  color: #ffcc00;
+  background-clip: text;
+  text-shadow:
+    -3px -3px 0 #493b26,
+    -3px 0px 0 #493b26,
+    -3px 3px 0 #493b26,
+    0px -3px 0 #493b26,
+    0px 3px 0 #493b26,
+    3px -3px 0 #493b26,
+    3px 0px 0 #493b26,
+    3px 3px 0 #493b26;
+}
+
+.sub-title {
+  font-size: 1.8rem;
+  line-height: 4rem;
+  font-weight: 500;
+  color: #666;
+  margin-top: 0;
+}
+
+.input-area {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  input {
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    border: none;
+  }
+
+  button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1.1rem;
+    background-color: #ffcc00;
+    color: #333;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+      background-color: #ffee58;
+    }
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0.5rem;
+
+  .cell {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #fff;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: normal;
+    color: #333;
+    font-size: 1.6rem;
+    border: 2px solid #ddd;
+
+    &.drawn {
+      background-color: #ffcc00;
+      border: 3px solid #493b26;
+      color: #493b26;
+      font-weight: bold;
+    }
+
+    &.last-drawn {
+      background: linear-gradient(-45deg, #ff3300, #ffe997);
+	    background-size: 1000% 1000%;
+      animation: gradient 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+.last-number-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-block: 20px 48px;
+}
+
+#last-number-drawn {
+  user-select: none;
+  border: 3px solid #493b26;
+  border-radius: 8px;
+  color: #493b26;
+  font-weight: bolder;
+  background-color: #ffcc00;
+  height: 112px;
+  width: 128px;
+  font-size: 48px;
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#input-number {
+  all: unset;
+  text-decoration: none;
+  border-bottom: 1px solid #493b26;
+  color: #493b26;
+  width: 32px;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
