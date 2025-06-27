@@ -149,3 +149,11 @@
 		background-position: 0% 50%;
 	}
 }
+
+.clean-button-container {
+  display: flex;
+  flex-flow: column;
+  margin-top: 16px;
+  justify-content: center;
+  margin-right: 4px;
+}
