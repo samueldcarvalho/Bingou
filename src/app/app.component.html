@@ -18,7 +18,12 @@
 </div>
 
 <div class="grid-container">
-  <div class="grid">
+  <div
+    class="grid"
+    [ngStyle]="{
+      'grid-template-columns': 'repeat(' + this.columnsQuantity() + ', 1fr)',
+    }"
+  >
     @for (number of this.numbers; track $index) {
       <div
         class="cell"

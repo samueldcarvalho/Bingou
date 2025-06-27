@@ -42,13 +42,14 @@
   flex-flow: column;
   gap: 8px;
   height: calc(100% - 32px);
+  max-width: 100dvw;
 }
 
 .grid {
   width: 100%;
   height: calc(100% - 32px);
+  max-width: 100dvw;
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
   gap: 4px;
 
   .cell {
@@ -107,8 +108,8 @@
   color: #493b26;
   font-weight: bolder;
   background-color: #ffcc00;
-  height: 112px;
-  width: 128px;
+  height: 104px;
+  width: 124px;
   font-size: 48px;
   text-align: center;
   display: flex;

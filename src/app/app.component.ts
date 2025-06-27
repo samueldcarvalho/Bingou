@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const lastNumberKey = 'LAST_NUMBER';
 const numbersKey = 'NUMBERS';
@@ -11,12 +12,31 @@ const numbersKey = 'NUMBERS';
 })
 export class AppComponent implements OnInit {
   protected lastNumberDrawn = signal<string | null>(null);
+  protected columnsQuantity = computed(() => {
+    const sqrt = Math.ceil(Math.sqrt(this._numbersQuantity()));
+
+    return sqrt.toFixed(0);
+  });
+  private _numbersQuantity = signal(100);
+  protected router = inject(Router);
 
   ngOnInit(): void {
     const lastNumber = localStorage.getItem(lastNumberKey);
     const numbers = localStorage.getItem(numbersKey);
 
     if ((!!numbers && !!lastNumber) == false) {
+      this.router.routerState.root.queryParams.subscribe((params) => {
+        const quantity = params['quantity'];
+
+        if (quantity == null) {
+          this.resetNumbers(this._numbersQuantity());
+          return;
+        }
+
+        this._numbersQuantity.set(Number.parseInt(quantity));
+        this.resetNumbers(this._numbersQuantity());
+      });
+
       return;
     }
 
@@ -24,7 +44,7 @@ export class AppComponent implements OnInit {
     this.lastNumberDrawn.set(lastNumber);
   }
 
-  protected numbers = Array.from({ length: 100 }, (_, i) => ({
+  protected numbers = Array.from({ length: 65 }, (_, i) => ({
     num: i.toString(),
     isDrawn: false,
   }));
@@ -53,12 +73,14 @@ export class AppComponent implements OnInit {
 
   protected clear() {
     localStorage.clear();
+    this.lastNumberDrawn.set(null);
+    this.resetNumbers(this._numbersQuantity());
+  }
 
-    this.numbers = Array.from({ length: 100 }, (_, i) => ({
+  private resetNumbers(quantity: number) {
+    this.numbers = Array.from({ length: quantity }, (_, i) => ({
       num: i.toString(),
       isDrawn: false,
     }));
-
-    this.lastNumberDrawn.set(null);
   }
 }
