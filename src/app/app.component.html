@@ -15,7 +15,9 @@
       (keydown)="this.drawNumber($event, inputNumber)"
     />
   </div>
+</div>
 
+<div class="grid-container">
   <div class="grid">
     @for (number of this.numbers; track $index) {
       <div
@@ -27,8 +29,8 @@
       </div>
     }
   </div>
+
   <div class="clean-button-container">
     <button (click)="this.clear()">Limpar</button>
   </div>
 </div>
-
