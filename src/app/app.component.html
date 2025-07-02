@@ -26,6 +26,7 @@
             class="cell"
             [class.drawn]="number.isDrawn"
             [class.last-drawn]="number.num == this.lastNumberDrawn()"
+            (click)="this.drawNumber(number.num, true)"
           >
             {{ number.num }}
           </div>

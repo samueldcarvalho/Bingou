@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     const lastNumber = localStorage.getItem(lastNumberKey);
     const columns = localStorage.getItem(columnsKey);
 
-    if ((!!columns && !!lastNumber) == true) {
+    if (!!columns == true) {
       this.columns.set(JSON.parse(columns!));
       this.lastNumberDrawn.set(lastNumber);
 
@@ -81,11 +81,13 @@ export class AppComponent implements OnInit {
     this.drawNumber(number);
   }
 
-  protected drawNumber(selectedNumber: string) {
+  protected drawNumber(selectedNumber: string, rechange?: boolean) {
     const allNumbers = this.columns().flatMap((i) => i.numbers);
-    const selectedItem = allNumbers.find((p) => p.num == selectedNumber);
 
-    console.log(this.inputNumber);
+    const selectedItem = allNumbers.find(
+      (p) =>
+        p.num == selectedNumber && (!!rechange == true || p.isDrawn == false),
+    );
 
     this.inputNumber.nativeElement.value = '';
     this.inputNumber.nativeElement.focus();
@@ -94,8 +96,11 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    selectedItem.isDrawn = true;
-    this.lastNumberDrawn.set(selectedItem.num);
+    selectedItem.isDrawn = rechange == null ? true : !selectedItem.isDrawn;
+
+    this.lastNumberDrawn.set(
+      selectedItem.isDrawn == true ? selectedItem.num : null,
+    );
 
     this.updateLocalStorage();
   }
