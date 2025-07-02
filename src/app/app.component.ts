@@ -1,8 +1,25 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { Router } from '@angular/router';
 
 const lastNumberKey = 'LAST_NUMBER';
-const numbersKey = 'NUMBERS';
+const columnsKey = 'COLUMNS';
+
+interface columnType {
+  columnId: string;
+  numbers: numberType[];
+}
+
+interface numberType {
+  num: string;
+  isDrawn: boolean;
+}
 
 @Component({
   selector: 'app-root',
@@ -11,78 +28,86 @@ const numbersKey = 'NUMBERS';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  protected router = inject(Router);
+  @ViewChild('inputNumber')
+  protected inputNumber!: ElementRef;
+  protected headers = ['B', 'I', 'N', 'G', 'O'];
+  protected columns = signal<columnType[]>([]);
   protected lastNumberDrawn = signal<string | null>(null);
 
-  private _numbersQuantity = signal(75);
-
-  protected columnsQuantity = computed(() => {
-    const sqrt = Math.ceil(Math.sqrt(this._numbersQuantity()));
-
-    return sqrt.toFixed(0);
-  });
+  protected router = inject(Router);
 
   ngOnInit(): void {
     const lastNumber = localStorage.getItem(lastNumberKey);
-    const numbers = localStorage.getItem(numbersKey);
+    const columns = localStorage.getItem(columnsKey);
 
-    if ((!!numbers && !!lastNumber) == false) {
-      this.router.routerState.root.queryParams.subscribe((params) => {
-        const quantity = params['quantity'];
-
-        if (quantity == null) {
-          this.resetNumbers(this._numbersQuantity());
-          return;
-        }
-
-        this._numbersQuantity.set(Number.parseInt(quantity));
-        this.resetNumbers(this._numbersQuantity());
-      });
+    if ((!!columns && !!lastNumber) == true) {
+      this.columns.set(JSON.parse(columns!));
+      this.lastNumberDrawn.set(lastNumber);
 
       return;
     }
 
-    this.numbers = JSON.parse(numbers!);
-    this.lastNumberDrawn.set(lastNumber);
+    this.generateColumns();
   }
 
-  protected numbers = Array.from({ length: 65 }, (_, i) => ({
-    num: i.toString(),
-    isDrawn: false,
-  }));
+  private generateColumns() {
+    this.columns.set([]);
+    let count = 0;
 
-  protected drawNumber(event: any, input: HTMLInputElement) {
+    for (let header of this.headers) {
+      const column = {
+        columnId: header,
+        numbers: [],
+      } as columnType;
+
+      const initialValue = count * 15 + 1;
+
+      column.numbers = Array.from({ length: 15 }, (_, j) => ({
+        num: (initialValue + j).toString(),
+        isDrawn: false,
+      }));
+
+      this.columns.update((old) => [...old, column]);
+
+      count++;
+    }
+  }
+
+  protected onPressEnterOnCell(event: any, number: string) {
     if (event.key != 'Enter') {
       return;
     }
 
-    var selectedNumber = this.numbers.find(
-      (p) => p.num == input.value && p.isDrawn == false,
-    );
+    this.drawNumber(number);
+  }
 
-    input.value = '';
+  protected drawNumber(selectedNumber: string) {
+    const allNumbers = this.columns().flatMap((i) => i.numbers);
+    const selectedItem = allNumbers.find((p) => p.num == selectedNumber);
 
-    if (selectedNumber == null) {
+    console.log(this.inputNumber);
+
+    this.inputNumber.nativeElement.value = '';
+    this.inputNumber.nativeElement.focus();
+
+    if (selectedItem == null) {
       return;
     }
 
-    selectedNumber.isDrawn = true;
-    this.lastNumberDrawn.set(selectedNumber.num);
+    selectedItem.isDrawn = true;
+    this.lastNumberDrawn.set(selectedItem.num);
 
-    localStorage.setItem(lastNumberKey, selectedNumber.num);
-    localStorage.setItem(numbersKey, JSON.stringify(this.numbers));
+    this.updateLocalStorage();
+  }
+
+  private updateLocalStorage() {
+    localStorage.setItem(lastNumberKey, this.lastNumberDrawn() ?? '');
+    localStorage.setItem(columnsKey, JSON.stringify(this.columns()));
   }
 
   protected clear() {
     localStorage.clear();
     this.lastNumberDrawn.set(null);
-    this.resetNumbers(this._numbersQuantity());
-  }
-
-  private resetNumbers(quantity: number) {
-    this.numbers = Array.from({ length: quantity }, (_, i) => ({
-      num: i.toString(),
-      isDrawn: false,
-    }));
+    this.generateColumns();
   }
 }

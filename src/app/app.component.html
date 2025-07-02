@@ -1,6 +1,5 @@
 <div class="card-container">
   <div class="header">
-    <!-- <h1 class="logo">Bingo!</h1> -->
     <p class="sub-title">Noite da Sopa 2025</p>
   </div>
 
@@ -12,37 +11,30 @@
       type="number"
       #inputNumber
       id="input-number"
-      (keydown)="this.drawNumber($event, inputNumber)"
+      (keydown)="this.onPressEnterOnCell($event, inputNumber.value)"
     />
   </div>
 </div>
 
 <div class="grid-container">
-  <div class="grid-title">
-    <div class="cell" style="font-weight: bold">B</div>
-    <div class="cell" style="font-weight: bold">I</div>
-    <div class="cell" style="font-weight: bold">N</div>
-    <div class="cell" style="font-weight: bold">G</div>
-    <div class="cell" style="font-weight: bold">O</div>
-  </div>
-  <div
-    class="grid"
-    [ngStyle]="{
-      'grid-template-columns': 'repeat(5, 1fr)',
-    }"
-  >
-    @for (number of this.numbers; track $index) {
-      <div
-        class="cell"
-        [class.drawn]="number.isDrawn"
-        [class.last-drawn]="number.num == this.lastNumberDrawn()"
-      >
-        {{ number.num }}
+  <div class="grid grid-cols-5">
+    @for (column of this.columns(); track $index) {
+      <div class="flex flex-col">
+        <div class="cell header">{{ column.columnId }}</div>
+        @for (number of column.numbers; track $index) {
+          <div
+            class="cell"
+            [class.drawn]="number.isDrawn"
+            [class.last-drawn]="number.num == this.lastNumberDrawn()"
+          >
+            {{ number.num }}
+          </div>
+        }
       </div>
     }
   </div>
+</div>
 
-  <div class="clean-button-container">
-    <button (click)="this.clear()">Limpar</button>
-  </div>
+<div class="clean-button-container">
+  <button (click)="this.clear()">Limpar</button>
 </div>
